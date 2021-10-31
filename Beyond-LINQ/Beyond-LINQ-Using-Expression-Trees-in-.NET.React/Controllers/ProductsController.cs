@@ -26,13 +26,18 @@ namespace Beyond_LINQ_Using_Expression_Trees_in_.NET.React.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromServices] DbContext dbContext, [FromQuery] ProductFilter productFilter, [FromQuery] string orderBy)
+        public IActionResult Get([FromServices] EntitiesDbContext dbContext, [FromQuery] ProductFilter productFilter, [FromQuery] string orderBy)
         {
             var spec = SpecBuilder<ProductListDto>.Build(productFilter);
 
             //dbContext.Products
             //    .Where(Product.IsForSaleSpec || Product.IsInStockSpec)
             //    .ToList();
+
+            // var elements = dbContext
+            //     .Products
+            //     .Where(Product.IsForSaleSpec || Product.IsInStockSpec)
+            //     .ToList();
 
             var q = _mapper
                 .ProjectTo<ProductListDto>(_dbContext.Products)
