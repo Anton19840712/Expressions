@@ -28,16 +28,15 @@ namespace Beyond_LINQ_Using_Expression_Trees_in_.NET.React
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(
-                    Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<DbContext, ApplicationDbContext>();
+            services.AddDbContext<EntitiesDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:EntitiesConnection"]));
+
+            services.AddScoped<DbContext, EntitiesDbContext>();
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<EntitiesDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                .AddApiAuthorization<ApplicationUser, EntitiesDbContext>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
@@ -75,7 +74,7 @@ namespace Beyond_LINQ_Using_Expression_Trees_in_.NET.React
 
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                scope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
+                scope.ServiceProvider.GetService<EntitiesDbContext>().Database.Migrate();
             }
 
             app.UseStaticFiles();
