@@ -13,8 +13,8 @@ namespace Beyond_LINQ_Using_Expression_Trees_in_.NET.React.Controllers
     [Route("api/[controller]")]
     public class ProductsController: Controller
     {
-        public static readonly Spec<Product> IsForSaleSpec = new Spec<Product>(x=>x.IsForSale);
-        public static readonly Spec<Product> IsInStockSpec = new Spec<Product>(x=>x.InStock>0);
+        //public static readonly Spec<Product> IsForSaleSpec = new Spec<Product>(x => x.IsForSale);
+        //public static readonly Spec<Product> IsInStockSpec = new Spec<Product>(x => x.InStock > 900);
 
         private readonly EntitiesDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -30,19 +30,24 @@ namespace Beyond_LINQ_Using_Expression_Trees_in_.NET.React.Controllers
         {
             var spec = SpecBuilder<ProductListDto>.Build(productFilter);
 
-            //dbContext.Products
-            //    .Where(Product.IsForSaleSpec || Product.IsInStockSpec)
+            //var products = dbContext.Products
+            //    .Where(x=>x.IsForSale)
             //    .ToList();
 
-            // var elements = dbContext
-            //     .Products
-            //     .Where(Product.IsForSaleSpec || Product.IsInStockSpec)
-            //     .ToList();
+            //var elements = _dbContext.Products.Where(IsForSaleSpec||IsInStockSpec);
+
+            //var prodPlusCategories = dbContext.Products.Select(x=>x.ProductName).Take(5).ToList();
+
+            var results3 = _dbContext.Products.Where(Product.IsForSaleSpec 
+                && Product.IsInStockMoreThanSpec
+                && Product.IsStartsWithRSpec
+                && Product.IsPriceMoreThanSpec
+                );
 
             var q = _mapper
-                .ProjectTo<ProductListDto>(_dbContext.Products)
+                .ProjectTo<ProductListDto>(results3)
                 .Where(spec);
-            
+
             if (orderBy != null)
             {
                 q = q.OrderBy(orderBy);
